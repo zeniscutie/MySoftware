@@ -16,7 +16,10 @@ export type AgentInfo = {
   studioLink?: { href: string; label: string };
 };
 
-export const AGENT_ORDER: AgentKey[] = ["chief_of_staff", "strategist", "copywriter", "art_director", "publisher", "community", "analyst"];
+export const AGENT_ORDER: AgentKey[] = [
+  "chief_of_staff", "strategist", "copywriter", "art_director", "publisher", "community", "analyst",
+  "product_scout", "product_analyst", "ad_creator", "brand_designer", "store_analyst",
+];
 
 export const AGENT_INFO: Record<AgentKey, AgentInfo> = {
   chief_of_staff: {
@@ -86,6 +89,59 @@ export const AGENT_INFO: Record<AgentKey, AgentInfo> = {
       { id: "research.trend-radar", label: "Check trends", description: "Which stories are moving fast enough to film today.", ai: false },
       { id: "learn.weekly-briefing", label: "Send the weekly briefing", description: "Your numbers for the week, best and weakest posts.", ai: false },
     ],
+  },
+  product_scout: {
+    key: "product_scout",
+    name: "Product Scout",
+    monogram: "Ps",
+    role: "Finds products worth selling",
+    about: "Searches TikTok and Meta ads, supplier listings and trend data for products that fit your rules, and adds each one to the Products board with where it was found.",
+    owns: ["Product hunts", "Ad and supplier research", "Trend checks"],
+    jobs: [{ id: "dropship.product-hunt", label: "Hunt for products", description: "Finds new candidates across ads, suppliers and trends.", ai: true }],
+    studioLink: { href: "/products", label: "Open Products" },
+  },
+  product_analyst: {
+    key: "product_analyst",
+    name: "Product Analyst",
+    monogram: "Pa",
+    role: "Checks profit, competition and risk",
+    about: "Works out the margin and break-even ad cost, checks how saturated the product is, rates its viral potential and supplier risk, then sends the ones that pass your rules to you for approval.",
+    owns: ["Profit and pricing", "Saturation", "Viral potential", "Supplier risk"],
+    jobs: [{ id: "dropship.analyze-new", label: "Analyse new products", description: "Scores every product the scout found and queues the good ones for you.", ai: true }],
+    studioLink: { href: "/products", label: "Open Products" },
+  },
+  ad_creator: {
+    key: "ad_creator",
+    name: "Ad Creator",
+    monogram: "Ac",
+    role: "Writes ad scripts, ad copy and posts",
+    about: "For every product you approve, writes video ad scripts with several hooks, ad copy for Meta and TikTok, and a week of organic posts.",
+    owns: ["Video ad scripts", "Ad copy", "Organic posts"],
+    jobs: [],
+    studioLink: { href: "/products", label: "Open Products" },
+  },
+  brand_designer: {
+    key: "brand_designer",
+    name: "Brand Designer",
+    monogram: "Bd",
+    role: "Names stores and designs the brand",
+    about: "Suggests store names, designs the logo direction, colours and fonts, plans the store layout and briefs the ad creatives, for niche stores and one-product stores.",
+    owns: ["Store names", "Logos and colours", "Store layout", "Ad creative briefs"],
+    jobs: [],
+    studioLink: { href: "/products", label: "Open Products" },
+  },
+  store_analyst: {
+    key: "store_analyst",
+    name: "Store Analyst",
+    monogram: "Sa",
+    role: "Reads your Shopify and ad numbers",
+    about: "Pulls orders from Shopify and spend from Meta Ads, works out profit and ROAS per product, and tells you what to scale and what to kill.",
+    owns: ["Shopify sales", "Meta Ads spend", "Profit per product", "Scale or kill calls"],
+    jobs: [
+      { id: "dropship.store-sync", label: "Sync store numbers", description: "Pulls the latest Shopify orders and Meta Ads spend.", ai: false },
+      { id: "dropship.store-report", label: "Write the store report", description: "Profit, ROAS and what to scale or kill, per product.", ai: true },
+    ],
+    studioLink: { href: "/products", label: "Open Products" },
   },
 };
 

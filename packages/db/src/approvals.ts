@@ -1,7 +1,7 @@
 import { nextRef, type Actor, type AgentKey, type Sql } from "@attentionos/core";
 import { agentColumn, recordAgentEvent } from "./events.ts";
 
-export const APPROVAL_KINDS = ["script", "edit", "post", "dm_reply", "comment_reply", "campaign", "spend", "brand_change", "other"] as const;
+export const APPROVAL_KINDS = ["script", "edit", "post", "dm_reply", "comment_reply", "campaign", "spend", "brand_change", "product", "other"] as const;
 export type ApprovalKind = (typeof APPROVAL_KINDS)[number];
 export const APPROVAL_STATUSES = ["pending", "approved", "rejected", "revised", "expired"] as const;
 export type ApprovalStatus = (typeof APPROVAL_STATUSES)[number];

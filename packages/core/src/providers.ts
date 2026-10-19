@@ -358,6 +358,73 @@ export interface Storage extends ProviderBase {
   url(uri: string, opts?: { expiresInS?: number }): Promise<string>;
 }
 
+// ---------------------------------------------------------------------------
+// Commerce and paid ads (dropshipping)
+// ---------------------------------------------------------------------------
+
+/** Amounts are in the shop's currency (`CommerceShop.currency`), as plain numbers (12.5 = 12.50). */
+export type CommerceShop = { name: string; domain: string; currency: string; timezone?: string };
+
+export type CommerceOrderLine = {
+  /** Store product id (Shopify: the numeric id, not the gid). Null for custom items. */
+  productId: string | null;
+  variantId?: string | null;
+  title: string;
+  sku?: string | null;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type CommerceOrder = {
+  id: string;
+  /** Human order number, e.g. "#1042". */
+  name?: string;
+  createdAt: string;
+  currency: string;
+  subtotal: number;
+  shipping: number;
+  discounts: number;
+  total: number;
+  refunded: number;
+  financialStatus?: string;
+  cancelled?: boolean;
+  lines: CommerceOrderLine[];
+};
+
+export type CommerceProduct = { id: string; title: string; handle?: string; status?: string; price?: number; url?: string; createdAt?: string };
+
+/** A store the owner sells from (Shopify). Read-only: AttentionOS never edits the store. */
+export interface Commerce extends ProviderBase {
+  getShop(): Promise<CommerceShop>;
+  /** Orders created in [since, until), oldest first. */
+  listOrders(opts: { since: string; until?: string; limit?: number }): Promise<CommerceOrder[]>;
+  listProducts(opts?: { limit?: number }): Promise<CommerceProduct[]>;
+}
+
+/** One ad (or ad set / campaign, by `level`) on one day. Amounts in `currency`. */
+export type AdInsightRow = {
+  day: string;
+  level: "campaign" | "adset" | "ad";
+  campaignId: string;
+  campaignName: string;
+  adsetId?: string;
+  adsetName?: string;
+  adId?: string;
+  adName?: string;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  purchases: number;
+  purchaseValue: number;
+  currency: string;
+};
+
+/** Paid-ads reporting (Meta Ads). Read-only: AttentionOS never changes campaigns or budgets. */
+export interface AdsAnalytics extends ProviderBase {
+  /** Daily rows for days in [since, until] (YYYY-MM-DD, the ad account's time zone). */
+  listDailyInsights(opts: { since: string; until: string; level?: "campaign" | "adset" | "ad" }): Promise<AdInsightRow[]>;
+}
+
 /** Everything a module can ask for. Unconfigured providers are absent. */
 export type ProviderRegistry = {
   publisher?: Publisher;
@@ -370,4 +437,6 @@ export type ProviderRegistry = {
   notifier?: Notifier;
   crm?: Crm;
   storage?: Storage;
+  commerce?: Commerce;
+  adsAnalytics?: AdsAnalytics;
 };

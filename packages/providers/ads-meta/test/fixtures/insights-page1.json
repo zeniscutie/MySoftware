@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "date_start": "2026-10-12",
+      "date_stop": "2026-10-12",
+      "campaign_id": "120001",
+      "campaign_name": "Demo product test",
+      "adset_id": "130001",
+      "adset_name": "Broad US",
+      "ad_id": "140001",
+      "ad_name": "Hook A",
+      "spend": "41.20",
+      "impressions": "5120",
+      "clicks": "96",
+      "account_currency": "USD",
+      "actions": [
+        { "action_type": "link_click", "value": "96" },
+        { "action_type": "omni_purchase", "value": "3" },
+        { "action_type": "offsite_conversion.fb_pixel_purchase", "value": "3" },
+        { "action_type": "purchase", "value": "3" }
+      ],
+      "action_values": [
+        { "action_type": "omni_purchase", "value": "89.97" },
+        { "action_type": "offsite_conversion.fb_pixel_purchase", "value": "89.97" },
+        { "action_type": "purchase", "value": "89.97" }
+      ]
+    }
+  ],
+  "paging": {
+    "cursors": { "before": "a", "after": "b" },
+    "next": "https://graph.facebook.com/v25.0/act_99/insights?after=b&access_token=test-token"
+  }
+}

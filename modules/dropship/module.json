@@ -1,0 +1,20 @@
+{
+  "id": "dropship",
+  "name": "Dropshipping",
+  "description": "Your dropshipping teams: the Product Scout finds products on ads, supplier sites and trends; the Product Analyst checks profit, saturation, viral potential and supplier risk against your rules and sends the good ones to you; after you approve, the Ad Creator writes ad scripts, ad copy and posts and the Brand Designer names the store and designs the brand; the Store Analyst reads Shopify and Meta Ads and says what to scale or kill.",
+  "agent": "product_analyst",
+  "tier": "opt-in",
+  "level": 1,
+  "dependsOn": [],
+  "requiredProviders": [],
+  "optionalProviders": ["commerce", "adsAnalytics", "notifier"],
+  "schedules": {
+    "dropship.product-hunt": "0 6 * * *",
+    "dropship.analyze-new": "30 6 * * *",
+    "dropship.sync-decisions": "*/5 * * * *",
+    "dropship.store-sync": "10 */3 * * *",
+    "dropship.store-report": "0 8 * * 1",
+    "dropship.daily-digest": "45 7 * * *"
+  },
+  "requiresAcknowledgement": []
+}

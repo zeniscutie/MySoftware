@@ -1,0 +1,25 @@
+{
+  "data": {
+    "orders": {
+      "pageInfo": { "hasNextPage": false, "endCursor": null },
+      "nodes": [
+        {
+          "id": "gid://shopify/Order/5002",
+          "name": "#1002",
+          "createdAt": "2026-10-11T09:30:00Z",
+          "currencyCode": "USD",
+          "displayFinancialStatus": "PARTIALLY_REFUNDED",
+          "cancelledAt": null,
+          "currentSubtotalPriceSet": { "shopMoney": { "amount": "19.99" } },
+          "totalShippingPriceSet": { "shopMoney": { "amount": "4.99" } },
+          "totalDiscountsSet": { "shopMoney": { "amount": "0.0" } },
+          "currentTotalPriceSet": { "shopMoney": { "amount": "24.98" } },
+          "totalRefundedSet": { "shopMoney": { "amount": "4.99" } },
+          "lineItems": { "nodes": [
+            { "title": "Custom gift wrap", "quantity": 1, "sku": null, "product": null, "variant": null, "originalUnitPriceSet": { "shopMoney": { "amount": "19.99" } } }
+          ] }
+        }
+      ]
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { registerBuiltins } from "@attentionos/runtime";
  */
 registerBuiltins({
   "@attentionos/module-community": () => import("@attentionos/module-community"),
+  "@attentionos/module-dropship": () => import("@attentionos/module-dropship"),
   "@attentionos/module-editing": () => import("@attentionos/module-editing"),
   "@attentionos/module-knowledge": () => import("@attentionos/module-knowledge"),
   "@attentionos/module-learn": () => import("@attentionos/module-learn"),
@@ -17,8 +18,10 @@ registerBuiltins({
   "@attentionos/module-scripting": () => import("@attentionos/module-scripting"),
   "@attentionos/module-strategy": () => import("@attentionos/module-strategy"),
   "@attentionos/module-trial-reels": () => import("@attentionos/module-trial-reels"),
+  "@attentionos/provider-ads-meta": () => import("@attentionos/provider-ads-meta"),
   "@attentionos/provider-analytics-csv": () => import("@attentionos/provider-analytics-csv"),
   "@attentionos/provider-asr-whispercpp": () => import("@attentionos/provider-asr-whispercpp"),
+  "@attentionos/provider-commerce-shopify": () => import("@attentionos/provider-commerce-shopify"),
   "@attentionos/provider-crm-webhook": () => import("@attentionos/provider-crm-webhook"),
   "@attentionos/provider-notify-console": () => import("@attentionos/provider-notify-console"),
   "@attentionos/provider-notify-discord": () => import("@attentionos/provider-notify-discord"),

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Bot, CalendarDays, FileText, House, Scissors, Search } from "lucide-react";
+import { Bot, FileText, House, Package, Scissors, Search } from "lucide-react";
 import { useLive } from "@/lib/use-live";
 import { cn } from "@/components/ui";
 import { ChiefLauncher } from "@/components/chat/chief-launcher";
@@ -21,14 +21,14 @@ function isTyping(t: EventTarget | null): boolean {
 
 const MOBILE_TABS = [
   { href: "/", label: "Home", Icon: House },
+  { href: "/products", label: "Products", Icon: Package },
   { href: "/scripts", label: "Scripts", Icon: FileText },
   { href: "/edit", label: "Edit", Icon: Scissors },
-  { href: "/calendar", label: "Calendar", Icon: CalendarDays },
   { href: "/agents", label: "Agents", Icon: Bot },
 ] as const;
 
 /** `g` then a letter jumps to a page. */
-const CHORDS: Record<string, string> = { h: "/", s: "/scripts", e: "/edit", c: "/calendar", a: "/agents", n: "/analytics", b: "/brand", m: "/chat" };
+const CHORDS: Record<string, string> = { h: "/", p: "/products", s: "/scripts", e: "/edit", c: "/calendar", a: "/agents", n: "/analytics", b: "/brand", m: "/chat" };
 
 /** The Studio shell: navigation on the left, the page, and the Chief of Staff in the bottom corner. */
 export function OsShell({ children }: { children: ReactNode }) {

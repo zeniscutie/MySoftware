@@ -1,0 +1,19 @@
+{
+  "name": "@attentionos/provider-ads-meta",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only Meta Ads reporting (daily spend, purchases and ROAS per campaign, ad set or ad) through the Marketing API.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@attentionos/core": "workspace:*",
+    "@attentionos/provider-shared": "workspace:*",
+    "zod": "^4.6.5"
+  }
+}

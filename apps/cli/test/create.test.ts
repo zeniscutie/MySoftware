@@ -34,6 +34,23 @@ describe("createWorkspace", () => {
     for (const d of ["media/raw", "media/renders", "media/assets", ".attentionos"]) expect(existsSync(join(dir, d))).toBe(true);
   });
 
+  it("builds a working dropshipper workspace from the real template and preset", async () => {
+    const repo = fileURLToPath(new URL("../../..", import.meta.url));
+    const dir = join(mkdtempSync(join(tmpdir(), "aos-create-")), "glow lab");
+    createWorkspace({ dir, preset: "dropshipper", templateDir: join(repo, "templates/workspace"), presetsDir: join(repo, "presets"), timezone: "America/New_York" });
+    const config = await loadConfigFile(join(dir, "config", "attentionos.config.ts"));
+    expect(config.northStar.metric).toBe("revenue_per_week");
+    expect(config.providers).toMatchObject({ commerce: "shopify", adsAnalytics: "meta" });
+    expect(config.modules.dropship).toMatchObject({
+      enabled: true,
+      settings: { storeModel: "both", rulesPreset: "low_ticket", niches: { focus: ["beauty and health"], anyNiche: true } },
+    });
+    expect(config.agents.product_analyst?.autonomy).toBe("review_all");
+    for (const f of ["products", "content", "brand"]) expect(existsSync(join(dir, "brand", "dropship", `${f}.md`))).toBe(true);
+    // Settings stay readable and editable in place.
+    expect(readFileSync(join(dir, "config", "attentionos.config.ts"), "utf8")).toContain('rulesPreset: "low_ticket"');
+  });
+
   it("uses the default preset file map when a preset has no preset.json", () => {
     const dir = join(mkdtempSync(join(tmpdir(), "aos-create-")), "agency");
     createWorkspace({ ...base, dir, preset: "agency-founder" });

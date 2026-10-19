@@ -14,6 +14,10 @@ const presetSchema = z.object({
   files: z.record(z.string(), z.string()).optional(),
   funnelMix: z.object({ tofu: z.number(), mofu: z.number(), bofu: z.number() }).optional(),
   northStar: z.object({ metric: z.string() }).optional(),
+  /** Provider choices the preset sets in the config (e.g. commerce: "shopify"). */
+  providers: z.record(z.string().regex(/^[a-zA-Z]+$/), z.string().regex(/^[a-z0-9-]+$/)).optional(),
+  /** Modules the preset switches on, with their settings. */
+  modules: z.record(z.string().regex(/^[a-z][a-z0-9-]{1,31}$/), z.record(z.string(), z.unknown())).optional(),
 }).passthrough();
 
 const DEFAULT_PRESET_FILES: Record<string, string> = {
@@ -73,6 +77,26 @@ function setNorthStar(config: string, metric: string): string {
   return config.replace(/northStar:\s*\{\s*metric:\s*"[^"]*"/, `northStar: { metric: "${metric}"`);
 }
 
+/** Sets `providers.<kind>` when the template has that line. */
+export function setProvider(config: string, kind: string, choice: string): string {
+  return config.replace(new RegExp(`(\\n\\s*${kind}:\\s*)"[^"]*"`), `$1"${choice}"`);
+}
+
+/** Switches a module on with the preset's settings, written out readably so the owner can edit them in place. */
+export function enableModule(config: string, id: string, settings: Record<string, unknown>): string {
+  const line = new RegExp(`\\n(\\s*)${id}:\\s*\\{\\s*enabled:\\s*(true|false),\\s*schedules:\\s*\\{\\s*\\},\\s*settings:\\s*\\{\\s*\\}\\s*\\},`);
+  const m = line.exec(config);
+  const indent = m?.[1] ?? "    ";
+  const body = JSON.stringify(settings, null, 2)
+    .replace(/"([a-zA-Z_][a-zA-Z0-9_]*)":/g, "$1:")
+    .split("\n")
+    .map((l, i) => (i === 0 ? l : `${indent}  ${l}`))
+    .join("\n");
+  const block = `\n${indent}${id}: {\n${indent}  enabled: true,\n${indent}  schedules: {},\n${indent}  settings: ${body},\n${indent}},`;
+  if (m) return config.replace(line, block);
+  return config.replace(/(\n\s*modules:\s*\{)/, `$1${block}`);
+}
+
 export function defaultTimezone(): string {
   return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/New_York";
 }
@@ -129,6 +153,12 @@ export function createWorkspace(o: CreateWorkspaceOptions): CreatedWorkspace {
     if (preset.funnelMix && existsSync(brandYaml)) writeFileSync(brandYaml, setFunnelMix(readFileSync(brandYaml, "utf8"), preset.funnelMix));
     const config = join(root, "config", "attentionos.config.ts");
     if (preset.northStar && existsSync(config)) writeFileSync(config, setNorthStar(readFileSync(config, "utf8"), preset.northStar.metric));
+    if (existsSync(config) && (preset.providers || preset.modules)) {
+      let text = readFileSync(config, "utf8");
+      for (const [kind, choice] of Object.entries(preset.providers ?? {})) text = setProvider(text, kind, choice);
+      for (const [id, settings] of Object.entries(preset.modules ?? {})) text = enableModule(text, id, settings);
+      writeFileSync(config, text);
+    }
   }
 
   for (const dir of ["media/raw", "media/renders", "media/assets", ".attentionos"]) mkdirSync(join(root, dir), { recursive: true });
@@ -143,7 +173,7 @@ export function createWorkspace(o: CreateWorkspaceOptions): CreatedWorkspace {
 export const CREATE_HELP = `Create a new AttentionOS workspace.
 
 Usage
-  attentionos create <folder> [--preset coach-consultant|agency-founder]
+  attentionos create <folder> [--preset coach-consultant|agency-founder|dropshipper]
 
 Options
   --preset <id>       Starting point for lanes, cadence and trend sources (default coach-consultant)

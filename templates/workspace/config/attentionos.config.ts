@@ -68,6 +68,9 @@ export default defineConfig({
     learn: { enabled: true, schedules: {}, settings: {} },
     // A searchable memory of your Brand Kit, posts, scripts and research, kept in your own database.
     knowledge: { enabled: true, schedules: {}, settings: {} },
+    // Dropshipping teams: product research and analysis, ad content, brand design and Shopify / Meta Ads numbers.
+    // Every setting (price range, markup, niches, what each team makes) is explained in docs/dropshipping.md.
+    dropship: { enabled: false, schedules: {}, settings: {} },
     ops: {
       enabled: true,
       schedules: {
@@ -94,6 +97,13 @@ export default defineConfig({
     art_director: { autonomy: "review_all" },
     publisher: { autonomy: "review_all" },
     community: { autonomy: "review_all" },
+    // The dropshipping teams. Products always wait for your OK unless the Product Analyst is on "autopilot",
+    // which approves strong picks (never borderline ones) and starts their launch on its own.
+    product_scout: { autonomy: "review_all" },
+    product_analyst: { autonomy: "review_all" },
+    ad_creator: { autonomy: "review_all" },
+    brand_designer: { autonomy: "review_all" },
+    store_analyst: { autonomy: "review_all" },
     chief_of_staff: { autonomy: "review_all" },
   },
 
@@ -109,6 +119,8 @@ export default defineConfig({
     notifier: "telegram", // telegram | discord | email | console
     crm: "lite", // lite | webhook | sheets | gohighlevel | hubspot
     storage: "local", // local | s3 (supabase works too if you already use it)
+    commerce: "none", // none | shopify (dropshipping: your store's orders, read-only)
+    adsAnalytics: "none", // none | meta (dropshipping: Meta Ads spend and purchases, read-only)
   },
 
   // The knowledge store: your Brand Kit, posts, scripts and research, searchable by meaning and by keywords,

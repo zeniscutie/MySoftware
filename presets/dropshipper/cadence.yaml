@@ -1,0 +1,36 @@
+# Posting cadence for product content. Times are local to the workspace timezone (24-hour clock).
+#
+# Evidence strength:
+#   STRONG  stated by the platform or confirmed broadly
+#   MEDIUM  consistent practitioner reports; verify on your own data
+#   WEAK    directional only; treat as a starting guess
+
+weeklyTarget:
+  shortVideos: 8 # one filming session with the product covers a week
+  textPosts: 0
+
+platforms:
+  tiktok:
+    postsPerWeek: 7
+    slots: ["11:00", "19:00"]
+    mode: assist
+    rules:
+      - Post the same product from several angles; one video rarely decides a product. (MEDIUM)
+  instagram:
+    postsPerWeek: 5
+    slots: ["12:00", "19:30"]
+    mode: assist
+    rules:
+      - Reels with the product working in the first 2 seconds. (MEDIUM)
+  youtube:
+    postsPerWeek: 4
+    slots: ["17:00"]
+    mode: assist
+    rules:
+      - Shorts reuse the TikTok cut. (WEAK)
+  facebook:
+    postsPerWeek: 3
+    slots: ["13:00"]
+    mode: assist
+    rules:
+      - Reels cross-posted from Instagram. (WEAK)

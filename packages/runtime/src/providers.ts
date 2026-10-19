@@ -37,6 +37,8 @@ export const PROVIDER_PACKAGES: Record<ProviderKind, Record<string, string>> = {
   notifier: { telegram: "notify-telegram", discord: "notify-discord", email: "notify-email", console: "notify-console" },
   crm: { webhook: "crm-webhook", sheets: "crm-webhook", gohighlevel: "crm-webhook", hubspot: "crm-webhook" },
   storage: { supabase: "storage-supabase", s3: "storage-s3" },
+  commerce: { shopify: "commerce-shopify" },
+  adsAnalytics: { meta: "ads-meta" },
 };
 
 /** Trend source kinds (brand/sources.yaml) → package. */
@@ -59,6 +61,8 @@ const REQUIRED_METHODS: Record<ProviderKind, string[]> = {
   notifier: ["send", "receive", "health"],
   crm: ["upsertLead", "health"],
   storage: ["put", "get", "url", "health"],
+  commerce: ["getShop", "listOrders", "listProducts", "health"],
+  adsAnalytics: ["listDailyInsights", "health"],
 };
 
 const KIND_FACTORY: Record<ProviderKind, string> = {
@@ -71,6 +75,8 @@ const KIND_FACTORY: Record<ProviderKind, string> = {
   notifier: "createNotifier",
   crm: "createCrm",
   storage: "createStorage",
+  commerce: "createCommerce",
+  adsAnalytics: "createAdsAnalytics",
 };
 
 export function implementsKind(value: unknown, kind: ProviderKind): boolean {

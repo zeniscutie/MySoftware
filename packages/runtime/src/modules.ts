@@ -7,7 +7,7 @@ import { findEngineRoot } from "./paths.ts";
 import { importOptional, type ImportSearch } from "./resolve.ts";
 
 /** Modules shipped with the engine. Each is the package `@attentionos/module-<id>`. */
-export const KNOWN_MODULES = ["research", "strategy", "scripting", "editing", "carousels", "publishing", "trial-reels", "community", "ops", "learn"] as const;
+export const KNOWN_MODULES = ["research", "strategy", "scripting", "editing", "carousels", "publishing", "trial-reels", "community", "ops", "learn", "dropship"] as const;
 
 export type ModuleListing = {
   id: string;

@@ -2,7 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { parseConfig } from "@attentionos/core";
+import { AGENT_KEYS, parseConfig } from "@attentionos/core";
 import { ensureWorkspace, insertOrder, loadSeed, resolveRelativeTime, seedAgents, seedShiftMs, slugify, zonedTime } from "../src/index.ts";
 import { createTestDatabase } from "../src/testing.ts";
 
@@ -67,12 +67,12 @@ describe("workspace bootstrap and seed loader", () => {
     expect(row!.slug).toBe("examplebrand-studio-2");
   });
 
-  it("seeds the seven agents and follows config", async () => {
+  it("seeds every agent and follows config", async () => {
     const { id } = await ensureWorkspace(db.sql, { name: "Agents", slug: "agents-test", timezone: "UTC" });
     await seedAgents(db.sql, id, parseConfig({ agents: { copywriter: { autonomy: "review_key", model: "opus" } } }));
     const rows = await db.sql<{ key: string; monogram: string; autonomy: string; model: string | null }[]>`
       select key, monogram, autonomy, model from agents where workspace_id = ${id} order by key`;
-    expect(rows).toHaveLength(7);
+    expect(rows).toHaveLength(AGENT_KEYS.length);
     expect(rows.find((r) => r.key === "copywriter")).toMatchObject({ monogram: "Cw", autonomy: "review_key", model: "opus" });
     expect(rows.find((r) => r.key === "chief_of_staff")?.monogram).toBe("Cs");
   });

@@ -12,7 +12,7 @@ const config: NextConfig = {
   // Lets several dev servers run side by side (NEXT_DIST_DIR=.next-s1 PORT=4751 pnpm dev).
   distDir: process.env.NEXT_DIST_DIR || ".next",
   // Workspace packages ship TypeScript source.
-  transpilePackages: ["@attentionos/core", "@attentionos/db", "@attentionos/module-onboarding", "@attentionos/module-production", "@attentionos/module-publishing", "@attentionos/module-trial-reels", "@attentionos/module-learn", "@attentionos/scoring"],
+  transpilePackages: ["@attentionos/core", "@attentionos/db", "@attentionos/module-dropship", "@attentionos/module-onboarding", "@attentionos/module-production", "@attentionos/module-publishing", "@attentionos/module-trial-reels", "@attentionos/module-learn", "@attentionos/scoring"],
   // Loaded at runtime from node_modules (jiti reads the workspace's TypeScript config for Settings).
   serverExternalPackages: ["postgres", "jiti"],
   // The published package runs on any OS, so don't ship sharp's platform binaries; Studio's images are served as is.

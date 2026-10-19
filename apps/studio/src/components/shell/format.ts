@@ -8,6 +8,11 @@ const AGENT_NAMES: Record<string, { name: string; monogram: string }> = {
   publisher: { name: "Publisher", monogram: "Pb" },
   community: { name: "Community", monogram: "Cm" },
   analyst: { name: "Analyst", monogram: "An" },
+  product_scout: { name: "Product Scout", monogram: "Ps" },
+  product_analyst: { name: "Product Analyst", monogram: "Pa" },
+  ad_creator: { name: "Ad Creator", monogram: "Ac" },
+  brand_designer: { name: "Brand Designer", monogram: "Bd" },
+  store_analyst: { name: "Store Analyst", monogram: "Sa" },
 };
 
 /** Agent key or actor string ("user:studio", "system") → display name and monogram. */

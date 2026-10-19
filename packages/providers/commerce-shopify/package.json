@@ -1,0 +1,19 @@
+{
+  "name": "@attentionos/provider-commerce-shopify",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only Shopify store data (shop, orders, products) through the GraphQL Admin API, for the dropship module.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@attentionos/core": "workspace:*",
+    "@attentionos/provider-shared": "workspace:*",
+    "zod": "^4.6.5"
+  }
+}

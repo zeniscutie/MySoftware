@@ -76,4 +76,9 @@ export const AGENT_ROLES: Record<AgentKey, string> = {
   publisher: "Schedules and posts everywhere",
   community: "Handles comments, DMs and leads",
   analyst: "Researches and measures what works",
+  product_scout: "Finds products worth selling",
+  product_analyst: "Checks profit, competition and risk",
+  ad_creator: "Writes ad scripts, ad copy and posts",
+  brand_designer: "Names stores and designs the brand",
+  store_analyst: "Reads your Shopify and ad numbers",
 };

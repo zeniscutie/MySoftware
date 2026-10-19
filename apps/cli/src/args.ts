@@ -50,7 +50,7 @@ export function splitCommand(argv: string[]): { command: string | null; args: st
   };
 }
 
-export const DEFAULT_PRESETS = ["coach-consultant", "agency-founder"] as const;
+export const DEFAULT_PRESETS = ["coach-consultant", "agency-founder", "dropshipper"] as const;
 
 export type CreateArgs = {
   dir: string;

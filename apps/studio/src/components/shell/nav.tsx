@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Bot, CalendarDays, ChartLine, FileText, House, Scissors, Settings, type LucideIcon } from "lucide-react";
+import { BookOpen, Bot, CalendarDays, ChartLine, FileText, House, Package, Scissors, Settings, type LucideIcon } from "lucide-react";
 import { NAV } from "@/lib/nav";
 import type { ApprovalItem } from "@/lib/live";
 import { useLive } from "@/lib/use-live";
@@ -10,17 +10,18 @@ import { usd } from "./format";
 import { Wordmark } from "./wordmark";
 import { usePendingApprovals } from "./decided";
 
-export const NAV_ICONS: Record<string, LucideIcon> = { House, FileText, Scissors, CalendarDays, Bot, ChartLine, BookOpen, Settings };
+export const NAV_ICONS: Record<string, LucideIcon> = { House, Package, FileText, Scissors, CalendarDays, Bot, ChartLine, BookOpen, Settings };
 
 export function isActive(pathname: string, href: string): boolean {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** What needs you, per page: scripts to OK on Scripts, finished videos on Edit, everything else on Home. */
+/** What needs you, per page: products on Products, scripts on Scripts, finished videos on Edit, everything else on Home. */
 export function needsYou(pending: ApprovalItem[]): Record<string, number> {
+  const products = pending.filter((a) => a.kind === "product").length;
   const scripts = pending.filter((a) => a.kind === "script").length;
   const videos = pending.filter((a) => a.kind === "edit").length;
-  return { "/scripts": scripts, "/edit": videos, "/": pending.length - scripts - videos };
+  return { "/products": products, "/scripts": scripts, "/edit": videos, "/": pending.length - products - scripts - videos };
 }
 
 /** Agents working right now, as a small live light: the team at a glance, and a way into the Agents view. */
@@ -63,7 +64,7 @@ export function SideNav() {
           const active = isActive(pathname, item.href);
           const count = counts[item.href] ?? 0;
           return (
-            <li key={item.href} className={cn(i === 6 && "mt-4 border-t border-border pt-4")}>
+            <li key={item.href} className={cn(item.href === "/brand" && "mt-4 border-t border-border pt-4")}>
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}

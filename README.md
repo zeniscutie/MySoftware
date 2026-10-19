@@ -132,6 +132,8 @@ From the stack dir:
 | Community | `community` | Keyword DMs, reply drafts, lead handoff |
 | Chief of Staff | `onboarding`, `ops` | Morning brief, approvals, Telegram/Discord chat |
 
+**Dropshipping** (opt-in `dropship` module, `dropshipper` preset): a Product Scout and Product Analyst find and score products against your rules (profit, saturation, viral potential, risk), you approve on the Products page, then an Ad Creator writes ad scripts, ad copy and posts and a Brand Designer names the store and designs the brand; a Store Analyst reads Shopify and Meta Ads and says what to scale or kill. See [docs/dropshipping.md](docs/dropshipping.md).
+
 The worker runs agents headless via `claude -p` against the workspace, with the AttentionOS MCP server attached. Two modes are set in `config/attentionos.config.ts`:
 
 | | `mode: "copilot"` | `mode: "autopilot"` |

@@ -1,0 +1,29 @@
+# Trend sources for dropshipping: stories and threads about products taking off. Add your own niche terms after
+# onboarding (the products you sell, the problem they solve).
+
+sources:
+  - id: news-tiktok-made-me-buy
+    kind: google_news
+    target: '"TikTok made me buy it"'
+    weight: 1
+    enabled: true
+  - id: news-viral-products
+    kind: google_news
+    target: "viral product sold out"
+    weight: 0.8
+    enabled: true
+  - id: news-beauty-gadgets
+    kind: google_news
+    target: "beauty gadget trend"
+    weight: 1
+    enabled: true
+  - id: reddit-dropship
+    kind: reddit
+    target: "dropship"
+    weight: 0.8
+    enabled: true
+  - id: reddit-shutupandtakemymoney
+    kind: reddit
+    target: "shutupandtakemymoney"
+    weight: 1
+    enabled: true

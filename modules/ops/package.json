@@ -17,6 +17,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@attentionos/db": "workspace:*"
+    "@attentionos/db": "workspace:*",
+    "@attentionos/module-dropship": "workspace:*"
   }
 }

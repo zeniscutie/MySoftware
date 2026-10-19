@@ -14,8 +14,18 @@ export type FunnelStage = (typeof FUNNEL_STAGES)[number];
 export const CTA_TYPES = ["comment_keyword", "dm_keyword", "link_in_bio", "follow", "save_share", "book_call", "none"] as const;
 export type CtaType = (typeof CTA_TYPES)[number];
 
-/** The six agents plus the orchestrator. */
-export const AGENT_KEYS = ["analyst", "strategist", "copywriter", "art_director", "publisher", "community", "chief_of_staff"] as const;
+/**
+ * The six content agents, the five dropshipping agents (product research, analysis, ad content, brand design,
+ * store analytics) and the orchestrator.
+ */
+export const AGENT_KEYS = [
+  "analyst", "strategist", "copywriter", "art_director", "publisher", "community",
+  "product_scout", "product_analyst", "ad_creator", "brand_designer", "store_analyst",
+  "chief_of_staff",
+] as const;
+
+/** The agents that make up the dropshipping teams (the `dropship` module). */
+export const DROPSHIP_AGENT_KEYS = ["product_scout", "product_analyst", "ad_creator", "brand_designer", "store_analyst"] as const;
 export type AgentKey = (typeof AGENT_KEYS)[number];
 
 export const AGENT_MONOGRAMS: Record<AgentKey, string> = {
@@ -25,6 +35,11 @@ export const AGENT_MONOGRAMS: Record<AgentKey, string> = {
   art_director: "Ad",
   publisher: "Pb",
   community: "Cm",
+  product_scout: "Ps",
+  product_analyst: "Pa",
+  ad_creator: "Ac",
+  brand_designer: "Bd",
+  store_analyst: "Sa",
   chief_of_staff: "Cs",
 };
 

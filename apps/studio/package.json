@@ -14,6 +14,7 @@
   "dependencies": {
     "@attentionos/core": "workspace:*",
     "@attentionos/db": "workspace:*",
+    "@attentionos/module-dropship": "workspace:*",
     "@attentionos/module-learn": "workspace:*",
     "@attentionos/module-onboarding": "workspace:*",
     "@attentionos/module-production": "workspace:*",

@@ -138,9 +138,13 @@ describe("plugin build", () => {
     const r = assemblePlugin(real);
     expect(r.pluginName).toBe("attention");
     expect(r.commands.map((c) => c.name)).toEqual(
-      expect.arrayContaining(["init", "brief", "research", "script", "edit", "publish", "inbox", "approvals", "learn", "doctor", "lesson"]),
+      expect.arrayContaining(["init", "brief", "research", "script", "edit", "publish", "inbox", "approvals", "learn", "doctor", "lesson", "products", "hunt", "launch", "store"]),
     );
-    expect(r.agents.map((a) => a.name).sort()).toEqual(["analyst", "art-director", "chief-of-staff", "community", "copywriter", "publisher", "strategist"]);
+    expect(r.agents.map((a) => a.name).sort()).toEqual([
+      "ad-creator", "analyst", "art-director", "brand-designer", "chief-of-staff", "community", "copywriter", "product-analyst", "product-scout",
+      "publisher", "store-analyst", "strategist",
+    ]);
+    expect(r.skills.filter((s) => s.module === "dropship").map((s) => s.name).sort()).toEqual(["ad-content", "brand-design", "product-analysis", "product-hunt", "store-analytics"]);
     expect(r.skills.some((s) => s.module === "ops" && s.name === "morning-brief")).toBe(true);
   });
 });

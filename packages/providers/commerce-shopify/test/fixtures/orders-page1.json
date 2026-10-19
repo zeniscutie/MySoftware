@@ -1,0 +1,26 @@
+{
+  "data": {
+    "orders": {
+      "pageInfo": { "hasNextPage": true, "endCursor": "cursor-1" },
+      "nodes": [
+        {
+          "id": "gid://shopify/Order/5001",
+          "name": "#1001",
+          "createdAt": "2026-10-10T14:03:00Z",
+          "currencyCode": "USD",
+          "displayFinancialStatus": "PAID",
+          "cancelledAt": null,
+          "currentSubtotalPriceSet": { "shopMoney": { "amount": "49.98" } },
+          "totalShippingPriceSet": { "shopMoney": { "amount": "0.0" } },
+          "totalDiscountsSet": { "shopMoney": { "amount": "5.0" } },
+          "currentTotalPriceSet": { "shopMoney": { "amount": "44.98" } },
+          "totalRefundedSet": { "shopMoney": { "amount": "0.0" } },
+          "lineItems": { "nodes": [
+            { "title": "Example Glow Roller", "quantity": 2, "sku": "EX-ROLL-1", "product": { "id": "gid://shopify/Product/9001" }, "variant": { "id": "gid://shopify/ProductVariant/9101" }, "originalUnitPriceSet": { "shopMoney": { "amount": "24.99" } } }
+          ] }
+        }
+      ]
+    }
+  },
+  "extensions": { "cost": { "requestedQueryCost": 252 } }
+}

@@ -24,6 +24,7 @@ const KIND: Record<string, { label: string; verb: string }> = {
   campaign: { label: "Campaign", verb: "planned" },
   spend: { label: "Spend", verb: "asked about" },
   brand_change: { label: "Brand Kit change", verb: "proposed" },
+  product: { label: "Product", verb: "found" },
 };
 
 function ScriptBody({ body }: { body: string }) {

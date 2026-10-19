@@ -103,6 +103,22 @@ export const chiefOfStaffJob = defineLlmJob({
     "mcp__attentionos__ops_set_quiet_hours",
     "mcp__attentionos__ops_set_demo_mode",
     "mcp__attentionos__knowledge_search",
+    // The dropshipping teams (present when the dropship module is on).
+    "mcp__attentionos__dropship_status",
+    "mcp__attentionos__dropship_get_rules",
+    "mcp__attentionos__dropship_list_products",
+    "mcp__attentionos__dropship_get_product",
+    "mcp__attentionos__dropship_list_assets",
+    "mcp__attentionos__dropship_hunt_products",
+    "mcp__attentionos__dropship_add_product",
+    "mcp__attentionos__dropship_analyze_product",
+    "mcp__attentionos__dropship_launch_product",
+    "mcp__attentionos__dropship_set_product_status",
+    "mcp__attentionos__dropship_list_stores",
+    "mcp__attentionos__dropship_store_performance",
+    "mcp__attentionos__dropship_sync_store",
+    "mcp__attentionos__dropship_store_report",
+    "mcp__attentionos__dropship_link_shopify",
   ],
   async prompt(ctx) {
     const i = ctx.input;

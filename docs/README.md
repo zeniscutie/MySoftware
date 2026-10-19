@@ -47,6 +47,7 @@ Each stage of the loop is a module you can turn on or off.
 | [ops](modules/ops.md) | Chief of Staff | Core | Morning brief, chat, approvals, quiet hours, demo mode |
 | [learn](modules/learn.md) | Analyst | Core | What worked, why, and what to make next |
 | [knowledge](modules/knowledge.md) | Analyst | Core | A searchable memory of your Brand Kit, posts, scripts and research, on your own machine |
+| [dropship](dropshipping.md) | Product Scout, Product Analyst, Ad Creator, Brand Designer, Store Analyst | Opt-in | Product research and analysis, ad content and brand kits for approved products, Shopify and Meta Ads numbers |
 
 ## Providers
 

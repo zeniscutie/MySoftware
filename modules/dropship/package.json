@@ -1,0 +1,27 @@
+{
+  "name": "@attentionos/module-dropship",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dropshipping teams: product research and analysis, ad content, brand design and store analytics.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./repo": "./src/repo.ts",
+    "./settings": "./src/settings.ts",
+    "./sync": "./src/sync.ts",
+    "./scoring": "./src/scoring.ts",
+    "./testing": "./src/testing/db.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@attentionos/core": "workspace:*",
+    "postgres": "^3.4.9",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@attentionos/db": "workspace:*"
+  }
+}

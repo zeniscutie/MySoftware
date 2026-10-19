@@ -1,6 +1,7 @@
 /** Studio routes, in nav order: make content, post it, see how it does. */
 export const NAV = [
   { href: "/", label: "Home", icon: "House" },
+  { href: "/products", label: "Products", icon: "Package" },
   { href: "/scripts", label: "Scripts", icon: "FileText" },
   { href: "/edit", label: "Edit", icon: "Scissors" },
   { href: "/calendar", label: "Calendar", icon: "CalendarDays" },

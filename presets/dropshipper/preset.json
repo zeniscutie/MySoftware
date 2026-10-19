@@ -1,0 +1,50 @@
+{
+  "id": "dropshipper",
+  "name": "Dropshipper",
+  "version": "0.1.0",
+  "description": "For dropshippers running niche stores and one-product stores: a research team that finds and analyses products, an Ad Creator and a Brand Designer for every product you approve, and a Store Analyst on Shopify and Meta Ads.",
+  "forWho": [
+    "Dropshippers testing products with TikTok and Meta ads",
+    "Owners of niche stores and one-product stores on Shopify",
+    "Anyone who wants product research, ad content and store numbers in one place"
+  ],
+  "files": {
+    "pillars.md": "brand/pillars.md",
+    "sources.yaml": "brand/sources.yaml",
+    "cadence.yaml": "brand/knowledge/preset-cadence.yaml",
+    "formats.md": "brand/knowledge/preset-formats.md",
+    "dropship/products.md": "brand/dropship/products.md",
+    "dropship/content.md": "brand/dropship/content.md",
+    "dropship/brand.md": "brand/dropship/brand.md"
+  },
+  "funnelMix": { "tofu": 60, "mofu": 25, "bofu": 15 },
+  "northStar": { "metric": "revenue_per_week" },
+  "primaryCta": "link_in_bio",
+  "platforms": ["tiktok", "instagram", "youtube", "facebook"],
+  "providers": { "commerce": "shopify", "adsAnalytics": "meta" },
+  "modules": {
+    "dropship": {
+      "storeModel": "both",
+      "rulesPreset": "low_ticket",
+      "niches": { "focus": ["beauty and health"], "anyNiche": true, "focusShare": 0.6 },
+      "sources": { "tiktokAds": true, "metaAds": true, "suppliers": true, "trends": true, "competitorStores": false }
+    }
+  },
+  "evidence": [
+    {
+      "claim": "Products with ads running for several weeks across several advertisers are usually profitable for someone.",
+      "strength": "MEDIUM",
+      "note": "Widely used by dropshippers as a demand signal; it also means competition, which the saturation score weighs."
+    },
+    {
+      "claim": "A 3x-4x markup on landed cost leaves room for paid ads on low-ticket products.",
+      "strength": "MEDIUM",
+      "note": "A rule of thumb; your break-even ROAS on each product page is the real test."
+    },
+    {
+      "claim": "Medical, guaranteed-result and weight-loss claims get ad accounts restricted.",
+      "strength": "STRONG",
+      "note": "Stated in the ad platforms' policies. The Ad Creator's banned-claims check enforces it."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "data": {
+    "products": {
+      "pageInfo": { "hasNextPage": false, "endCursor": null },
+      "nodes": [
+        { "id": "gid://shopify/Product/9001", "title": "Example Glow Roller", "handle": "example-glow-roller", "status": "ACTIVE", "onlineStoreUrl": "https://shop.example/products/example-glow-roller", "createdAt": "2026-09-01T00:00:00Z", "priceRangeV2": { "minVariantPrice": { "amount": "24.99" } } }
+      ]
+    }
+  }
+}

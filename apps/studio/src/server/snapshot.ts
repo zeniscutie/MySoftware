@@ -11,6 +11,11 @@ const NAMES: Record<AgentKey, string> = {
   publisher: "Publisher",
   community: "Community",
   analyst: "Analyst",
+  product_scout: "Product Scout",
+  product_analyst: "Product Analyst",
+  ad_creator: "Ad Creator",
+  brand_designer: "Brand Designer",
+  store_analyst: "Store Analyst",
 };
 
 type EventRow = { id: string | number; ts: Date; agent: string; run_id: string | null; kind: LiveEvent["kind"]; message: string; data: unknown };

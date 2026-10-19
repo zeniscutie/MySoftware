@@ -19,24 +19,33 @@ Install it from Claude Code:
 | `/attention:brief` | Your morning brief, what to film today, what's waiting for approval and how yesterday went |
 | `/attention:doctor` | Check your setup (keys, tools, database, Brand Kit) and explain how to fix anything that fails |
 | `/attention:edit` | Turn raw footage into a post-ready reel with captions, cuts and quality checks |
+| `/attention:hunt` | Send the Product Scout to find new products (optionally in a niche), or have a product link you found analysed |
 | `/attention:inbox` | Sort your DMs and comments into hot, warm and cold, with draft replies for you to approve |
 | `/attention:init` | Set up your Brand Kit with a short interview (website, handles, offer, audience and your own posts) |
+| `/attention:launch` | See or (re)make the launch kit for an approved product - ad scripts, ad copy, posts, store names, brand and layout |
 | `/attention:learn` | What worked, what didn't and why, with post-mortems and proposed lessons |
 | `/attention:lesson` | Save a correction as a dated rule in brand/lessons.md so every agent follows it from now on |
+| `/attention:products` | Your dropshipping board - what the teams found, what's waiting for your OK, and what's launching |
 | `/attention:publish` | Schedule approved content across your platforms, with tracked links and keyword DMs |
 | `/attention:research` | Find what's working in your niche, competitor outliers, trends and your own top posts |
 | `/attention:script` | Write a validated script for an idea or a planned piece of content |
+| `/attention:store` | How your store is doing - Shopify sales, Meta Ads spend, ROAS against break-even, and what to scale or kill |
 
 ## Agents
 
 | Agent | When it's used |
 |---|---|
+| `attention:ad-creator` | Dropshipping ad content. Use to write or rewrite video ad scripts with alternative hooks, Meta and TikTok ad copy, and organic posts for an… |
 | `attention:analyst` | Research and measurement. Use for competitor outliers, trend radar, teardowns of a specific post, syncing and reading the owner's own resul… |
 | `attention:art-director` | Visuals. Use to edit raw footage into a reel (cuts, captions, overlays, sound, QC), plan formats and shoot directions, handle revision note… |
-| `attention:chief-of-staff` | The owner's single point of contact. Use for the morning brief, the approvals queue, routing a free-form request to the right specialist, q… |
+| `attention:brand-designer` | Dropshipping store design. Use for store names and domain ideas, logo concepts, colour palettes and fonts, Shopify store layouts, creative … |
+| `attention:chief-of-staff` | The owner's single point of contact and central brain. Use for the morning brief, the approvals queue (content and products), a dropshippin… |
 | `attention:community` | Conversations. Use to triage DMs and comments (hot, warm, cold), draft replies in the owner's voice, manage keyword-to-DM automations and l… |
 | `attention:copywriter` | Words. Use to write or revise video scripts, hooks, per-platform captions, carousel copy, text posts and lead-magnet guides in the owner's … |
+| `attention:product-analyst` | Dropshipping product analysis. Use to check a product's supplier cost and delivery, profit and break-even ad cost, saturation, viral potent… |
+| `attention:product-scout` | Dropshipping product research. Use to find new products to sell on TikTok and Meta ads, supplier sites (AliExpress, CJdropshipping) and tre… |
 | `attention:publisher` | Distribution. Use to schedule approved content, cross-post or backfill to other platforms, build tracked links and run a dry run of the wee… |
+| `attention:store-analyst` | Dropshipping store analytics. Use for Shopify sales, Meta Ads spend, ROAS against break-even, CPA, profit per product, and what to scale, k… |
 | `attention:strategist` | Planning. Use to decide what to make and when, build the daily "Film today" brief or a batch-day plan, balance lanes and the funnel mix, an… |
 
 ## Skills
@@ -46,6 +55,11 @@ Install it from Claude Code:
 | `dm-triage` | community | Sort the owner's DMs into Hot, Warm and Cold with draft replies, safely. Rules filter spam and automation noise first; only real conversati… |
 | `keyword-dm-chain` | community | Set up the keyword → DM → lead magnet chain for a piece of content. Reserve a keyword from the ledger, register the one guide for it with a… |
 | `lead-magnet-guide` | community | Write the lead-magnet guide for a keyword in the house format. One guide per keyword, solving one narrow problem completely, with an email … |
+| `ad-content` | dropship | Write video ad scripts with alternative hooks, Meta and TikTok ad copy, and a run of organic posts for an approved dropshipping product. Us… |
+| `brand-design` | dropship | Plan the store for an approved dropshipping product (one-product store, niche store or an existing store), propose store names with domain … |
+| `product-analysis` | dropship | Analyse one dropshipping product in depth (supplier cost and delivery, competitor prices, saturation, viral potential, supplier and product… |
+| `product-hunt` | dropship | Find new products to dropship on TikTok and Meta ads, supplier sites and trend data, within the owner's rules and niches, using public web … |
+| `store-analytics` | dropship | Read the store's Shopify and Meta Ads numbers per product (revenue, ad spend, ROAS against break-even, CPA, CTR, net profit) and explain wh… |
 | `edit-notes` | editing | How the owner gives edit notes and how the Art Director applies them. Covers spoken notes while filming ("cut that", "editor, cut"), cut-li… |
 | `media-hunt` | editing | Find license-clean B-roll, screenshots and stills for an edit, with a provenance log and hard budgets (at most 8 stills and 6 loops per vid… |
 | `reel-editor` | editing | Plan a vertical short (Reels, TikTok, Shorts) from an approved cut list. The Art Director writes an EditPlan from a format template, the tr… |
@@ -56,7 +70,7 @@ Install it from Claude Code:
 | `onboarding-site-analysis` | onboarding | Read a business's own website and draft the first Brand Kit basics - name, one-liner, offers, results it may claim and a first ideal-custom… |
 | `onboarding-voice-profile` | onboarding | Build a voice profile from the owner's OWN posts (captions and transcripts) so scripts sound like them on their best day - rhythm, openers,… |
 | `morning-brief` | ops | Write the owner's morning brief from today's AttentionOS data (film today, approvals, results, alerts). Use for /attention:brief, the sched… |
-| `owner-chat` | ops | Act as the owner's Chief of Staff in chat - answer questions about their content system, take decisions on approvals, change quiet hours or… |
+| `owner-chat` | ops | Act as the owner's Chief of Staff in chat - answer questions about their content system and dropshipping business, take decisions on approv… |
 | `cross-post` | publishing | Repurpose a reel that's already on Instagram to TikTok, YouTube Shorts, Facebook and LinkedIn, or backfill recent reels. Swaps the comment-… |
 | `publishing` | publishing | Schedule posts safely as the Publisher. Plan the week from the cadence, validate every payload before any API call, dry-run first, respect … |
 | `content-research` | research | Find what to make next from competitor outliers, cross-creator trends and your own numbers. Use when asked "what's working", "what should I… |

@@ -37,6 +37,11 @@ export const AGENT_NAMES: Record<AgentKey, string> = {
   art_director: "Art Director",
   publisher: "Publisher",
   community: "Community",
+  product_scout: "Product Scout",
+  product_analyst: "Product Analyst",
+  ad_creator: "Ad Creator",
+  brand_designer: "Brand Designer",
+  store_analyst: "Store Analyst",
   chief_of_staff: "Chief of Staff",
 };
 
@@ -53,6 +58,7 @@ const KIND_LABEL: Record<string, string> = {
   campaign: "campaign",
   spend: "spend",
   brand_change: "Brand Kit change",
+  product: "product",
   other: "request",
 };
 

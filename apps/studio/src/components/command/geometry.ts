@@ -37,7 +37,11 @@ export const NETWORK: [string, string][] = [
   ["publisher", "community"],
   ["community", "analyst"],
   ["analyst", "strategist"],
-  ...(["strategist", "copywriter", "art_director", "publisher", "community", "analyst"].map((k) => ["chief_of_staff", k]) as [string, string][]),
+  ["product_scout", "product_analyst"],
+  ["product_analyst", "ad_creator"],
+  ["product_analyst", "brand_designer"],
+  ["store_analyst", "product_scout"],
+  ...(["strategist", "copywriter", "art_director", "publisher", "community", "analyst", "product_scout", "product_analyst", "ad_creator", "brand_designer", "store_analyst"].map((k) => ["chief_of_staff", k]) as [string, string][]),
 ];
 
 export function edgeKey(a: string, b: string): string {
@@ -55,6 +59,12 @@ export const SEATS: Record<string, Seat> = {
   art_director: { track: "outer", angle: 112 },
   publisher: { track: "outer", angle: 202 },
   community: { track: "outer", angle: 292 },
+  // The dropshipping teams sit between the content team's seats.
+  product_scout: { track: "inner", angle: 20 },
+  product_analyst: { track: "inner", angle: 140 },
+  store_analyst: { track: "inner", angle: 260 },
+  ad_creator: { track: "outer", angle: 67 },
+  brand_designer: { track: "outer", angle: 157 },
 };
 
 /** Milliseconds per revolution; the tracks counter-rotate. */

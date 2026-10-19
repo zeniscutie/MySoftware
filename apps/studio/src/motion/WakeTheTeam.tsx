@@ -9,7 +9,7 @@ import { useShowcaseReduced } from "./reduced";
 import { EASE_OUT, EASE_SIGNAL, GAP_CENTER_DEG, GAP_DEG, SIGNAL_BLOOM_FILTER, SNAP, STAGGER_MS, arcPath, polar, ringPath } from "./tokens";
 
 const KEY = "aos.wake.day";
-const ORDER = ["chief_of_staff", "strategist", "copywriter", "art_director", "publisher", "community", "analyst"];
+const ORDER = ["chief_of_staff", "strategist", "copywriter", "art_director", "publisher", "community", "analyst", "product_scout", "product_analyst", "ad_creator", "brand_designer", "store_analyst"];
 
 type Target = { key: string; x: number; y: number; size: number };
 

@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "date_start": "2026-10-13",
+      "date_stop": "2026-10-13",
+      "campaign_id": "120001",
+      "campaign_name": "Demo product test",
+      "adset_id": "130001",
+      "adset_name": "Broad US",
+      "ad_id": "140002",
+      "ad_name": "Hook B",
+      "spend": "18.00",
+      "impressions": "2400",
+      "clicks": "30",
+      "account_currency": "USD"
+    }
+  ],
+  "paging": { "cursors": { "before": "b", "after": "c" } }
+}

@@ -67,9 +67,14 @@ export const configSchema = z.object({
     notifier: providerChoice(["telegram", "discord", "email", "console"] as const, "telegram"),
     crm: providerChoice(["lite", "webhook", "sheets", "gohighlevel", "hubspot"] as const, "lite"),
     storage: providerChoice(["local", "supabase", "s3"] as const, "local"),
+    /** The online store the dropship module reads sales from. */
+    commerce: providerChoice(["none", "shopify"] as const, "none"),
+    /** The ad account the dropship module reads spend and ROAS from. */
+    adsAnalytics: providerChoice(["none", "meta"] as const, "none"),
   }).default({
     publisher: "zernio", inbox: "zernio", ownAnalytics: "zernio", scraper: "apify", asr: "whispercpp",
     renderer: "cut", imageGen: "none", notifier: "telegram", crm: "lite", storage: "local",
+    commerce: "none", adsAnalytics: "none",
   }),
 
   /**

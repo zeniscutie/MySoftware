@@ -230,6 +230,9 @@ importers:
       '@attentionos/module-community':
         specifier: workspace:*
         version: link:../../modules/community
+      '@attentionos/module-dropship':
+        specifier: workspace:*
+        version: link:../../modules/dropship
       '@attentionos/module-editing':
         specifier: workspace:*
         version: link:../../modules/editing
@@ -263,12 +266,18 @@ importers:
       '@attentionos/module-trial-reels':
         specifier: workspace:*
         version: link:../../modules/trial-reels
+      '@attentionos/provider-ads-meta':
+        specifier: workspace:*
+        version: link:../../packages/providers/ads-meta
       '@attentionos/provider-analytics-csv':
         specifier: workspace:*
         version: link:../../packages/providers/analytics-csv
       '@attentionos/provider-asr-whispercpp':
         specifier: workspace:*
         version: link:../../packages/providers/asr-whispercpp
+      '@attentionos/provider-commerce-shopify':
+        specifier: workspace:*
+        version: link:../../packages/providers/commerce-shopify
       '@attentionos/provider-crm-webhook':
         specifier: workspace:*
         version: link:../../packages/providers/crm-webhook
@@ -320,6 +329,9 @@ importers:
       '@attentionos/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@attentionos/module-dropship':
+        specifier: workspace:*
+        version: link:../../modules/dropship
       '@attentionos/module-learn':
         specifier: workspace:*
         version: link:../../modules/learn
@@ -430,6 +442,22 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
 
+  modules/dropship:
+    dependencies:
+      '@attentionos/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@attentionos/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+
   modules/editing:
     dependencies:
       '@attentionos/core':
@@ -524,6 +552,9 @@ importers:
       '@attentionos/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@attentionos/module-dropship':
+        specifier: workspace:*
+        version: link:../dropship
 
   modules/production:
     dependencies:
@@ -741,6 +772,18 @@ importers:
         specifier: ^4.6.5
         version: 4.6.5
 
+  packages/providers/ads-meta:
+    dependencies:
+      '@attentionos/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@attentionos/provider-shared':
+        specifier: workspace:*
+        version: link:../../provider-shared
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+
   packages/providers/analytics-csv:
     dependencies:
       '@attentionos/core':
@@ -758,6 +801,18 @@ importers:
       '@attentionos/media':
         specifier: workspace:*
         version: link:../../media
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+
+  packages/providers/commerce-shopify:
+    dependencies:
+      '@attentionos/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@attentionos/provider-shared':
+        specifier: workspace:*
+        version: link:../../provider-shared
       zod:
         specifier: ^4.6.5
         version: 4.6.5

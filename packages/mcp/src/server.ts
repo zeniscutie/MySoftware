@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import { compact, ToolError, type Actor, type ModuleDefinition, type ToolDefinition, type WorkspaceContext } from "@attentionos/core";
+import { AGENT_KEYS, compact, ToolError, type Actor, type ModuleDefinition, type ToolDefinition, type WorkspaceContext } from "@attentionos/core";
 import { agentColumn, recordAgentEvent } from "@attentionos/db";
 import { resolveModules, type ModuleProblem, type ProviderDiagnostic } from "@attentionos/runtime";
 import { callActor, envActor } from "./actor.ts";
@@ -82,7 +82,7 @@ export function registerTools(server: McpServer, ws: WorkspaceContext, tools: To
         const { _actor, ...input } = args;
         const actor = callActor(baseActor, locked, _actor ?? extra?._meta?.actor ?? extra?._meta?._actor);
         if (!actor) {
-          return text(`Error: "${String(_actor)}" is not a valid actor.\nHint: use agent:<analyst|strategist|copywriter|art_director|publisher|community|chief_of_staff> or user:<id>.`, true);
+          return text(`Error: "${String(_actor)}" is not a valid actor.\nHint: use agent:<${AGENT_KEYS.join("|")}> or user:<id>.`, true);
         }
         const started = Date.now();
         try {

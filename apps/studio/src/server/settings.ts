@@ -614,6 +614,8 @@ export const PROVIDER_KEYS: Record<string, Record<string, string[]>> = {
   notifier: { telegram: ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"], discord: ["DISCORD_BOT_TOKEN", "DISCORD_CHANNEL_ID"], email: [], console: [] },
   crm: { lite: [], webhook: ["CRM_WEBHOOK_URL"], sheets: [], gohighlevel: [], hubspot: [] },
   storage: { local: [], supabase: [], s3: [] },
+  commerce: { none: [], shopify: ["SHOPIFY_STORE_DOMAIN"] },
+  adsAnalytics: { none: [], meta: ["META_ACCESS_TOKEN", "META_AD_ACCOUNT_ID"] },
 };
 
 export const PROVIDER_LABELS: Record<string, string> = {
@@ -627,4 +629,6 @@ export const PROVIDER_LABELS: Record<string, string> = {
   notifier: "Notifications",
   crm: "Leads (CRM)",
   storage: "File storage",
+  commerce: "Online store",
+  adsAnalytics: "Paid ads",
 };

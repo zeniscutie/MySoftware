@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTestDatabase } from "@attentionos/db/testing";
+import { AGENT_KEYS } from "@attentionos/core";
 import { loadWorkspace, WorkspaceError } from "../src/index.ts";
 import { BRAND_YAML, CONFIG_TS, makeWorkspace } from "./helpers.ts";
 
@@ -23,7 +24,7 @@ describe("loadWorkspace", () => {
       expect(ws.secret("ANTHROPIC_API_KEY")).toBe("sk-test");
       expect(ws.brand().brand.name).toBe("Examplebrand Studio");
       const agents = await ws.sql`select key from agents where workspace_id = ${ws.id}`;
-      expect(agents).toHaveLength(7);
+      expect(agents).toHaveLength(AGENT_KEYS.length);
       expect(ws.diagnostics.find((d) => d.kind === "notifier")?.status).toBe("not_installed");
       const again = await loadWorkspace(root, { env: {}, providers: false });
       expect(again.id).toBe(ws.id);

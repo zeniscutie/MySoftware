@@ -8,7 +8,7 @@
  * Output layout (the standard Claude Code plugin layout):
  *   plugin/.claude-plugin/plugin.json   from plugin-src/plugin.json
  *   plugin/commands/*.md                /attention:<name> commands, from plugin-src/commands
- *   plugin/agents/*.md                  the six agents plus the Chief of Staff, from plugin-src/agents
+ *   plugin/agents/*.md                  the content and dropshipping agents plus the Chief of Staff, from plugin-src/agents
  *   plugin/hooks/                       hooks.json + run.mjs, from plugin-src/hooks
  *   plugin/skills/<skill>/              every modules/<id>/skills/<skill>/ folder, discovered at build time
  *   plugin/README.md                    generated inventory
