@@ -1,248 +1,242 @@
-# Plan: an ECC-style agent harness for Claude Code
+# Plan: an ECC-style agent harness for running a Shopify store
 
-Status: draft for review · Reference: [affaan-m/ecc](https://github.com/affaan-m/ecc) v2.2.3 (MIT)
+Status: approved, Phase 0 in progress · Reference: [affaan-m/ecc](https://github.com/affaan-m/ecc) v2.2.3 (MIT)
 
 ## 1. Goal
 
-Build **MySoftware** (working name; plugin slug `mysoftware`, short prefix `msw`) — a
-Claude Code plugin that gives the agent a repeatable engineering loop:
+Build **MySoftware** (plugin slug `mysoftware`, short prefix `msw`) — a private Claude Code
+plugin for two people running a Shopify store. It gives Claude a repeatable engineering loop:
 
 ```text
 plan -> test -> implement -> review -> verify -> remember
 ```
 
-It ships as one installable package containing agents, slash commands, skills, rules and
-hooks, plus a small CLI that installs it outside the plugin system and checks the install.
+and the Shopify know-how and guardrails the work needs: theme changes, store apps, discount
+and checkout logic, and scripts that read or bulk-edit store data.
+
+### Decisions
+
+| Question | Decision |
+|---|---|
+| Name | **MySoftware** / `msw` |
+| Audience | Private, two users (owner + business partner). No public docs, no npm package |
+| Languages | Varies by task — see §3. Guidance is per *task type*, not one language |
+| Reuse ECC text | **Yes** — adapt ECC agents/skills/commands, keep attribution in `NOTICE.md` |
+| Distribution | **Plugin only**. No CLI installer (old Phase 3 dropped) |
 
 ### What we take from ECC
 
-ECC proved out a component model that works. We reuse the *shape*, not the volume:
+| ECC component | Where in ECC | Our version |
+|---|---|---|
+| Plugin manifest + marketplace | `.claude-plugin/` | Same, one plugin |
+| Agents (Markdown + frontmatter) | `agents/` (71) | 4 general + 3 Shopify |
+| Commands | `commands/` (97) | 5 general + 3 Shopify |
+| Skills (`skills/<name>/SKILL.md`) | `skills/` (311) | 3 general + 6 Shopify |
+| Rules | `rules/` | Short house rules injected at session start (see §2.5) |
+| Hooks + `minimal\|standard\|strict` profiles | `hooks/`, `scripts/hooks/`, `scripts/lib/hook-flags.js` | Same idea, `MSW_*` env vars |
+| Session memory | `hooks/memory-persistence/` | Same, local files only |
+| CI validators | `scripts/ci/validate-*.js` | Same, 4 validators |
 
-| ECC component | What it is | Where in ECC | Our version |
-|---|---|---|---|
-| Plugin manifest | `plugin.json` + `marketplace.json` | `.claude-plugin/` | Same, one plugin |
-| Agents | Markdown + YAML frontmatter (`name`, `description`, `tools`, `model`) | `agents/` (71) | 5 agents |
-| Commands | Markdown slash commands with `description` frontmatter | `commands/` (97) | 6 commands |
-| Skills | `skills/<name>/SKILL.md` with When to Use / How It Works / Examples | `skills/` (311) | 6 skills |
-| Rules | Always-on guidance, `common/` + per-language | `rules/` | `common/` + `typescript/` |
-| Hooks | `hooks/hooks.json` → Node scripts, gated by profile | `hooks/`, `scripts/hooks/` | 6 hooks |
-| Hook profiles | `minimal \| standard \| strict` + disable list via env | `scripts/lib/hook-flags.js`, `run-with-flags.js` | Same idea, `MSW_*` env vars |
-| Session memory | SessionStart loads last summary, PreCompact/SessionEnd save it | `hooks/memory-persistence/` | Same, local files only |
-| Installer | Manifest-driven modules + profiles, install-state for clean uninstall | `manifests/`, `scripts/install-apply.js`, `scripts/lib/install-state.js` | Smaller: 4 modules, 3 profiles |
-| CI validators | Lint every agent/skill/command/hook file | `scripts/ci/validate-*.js` | Same, 5 validators |
+### Left out
 
-### What we deliberately leave out (v1)
+Other AI tools (Cursor, Codex, OpenCode…), translations, ECC's Rust/Python side projects,
+dashboard, hosted tier, learning "instinct" observer, the CLI installer, and all non-Shopify
+domain packs.
 
-- Multi-harness support (Codex, Cursor, OpenCode, Gemini, Kiro, Qwen…). ECC carries a
-  directory and install target per harness; that is most of its maintenance cost.
-  **Claude Code only** for v1; design the installer so a second target can be added later.
-- Translated docs (ECC ships ~15 languages).
-- The Rust `ecc2/` control plane, Python `src/llm/` provider layer, `ecc_dashboard.py`,
-  GitHub App / hosted Pro tier, continuous-learning "instinct" observer, GAN/multi-model loops.
-- Domain skill packs (marketing, prediction markets, supply chain, etc.).
+## 2. Constraints learned from ECC
 
-## 2. Constraints learned from ECC (read before building)
+From `ecc/.claude-plugin/PLUGIN_SCHEMA_NOTES.md` and `ecc/hooks/README.md`:
 
-These come from `ecc/.claude-plugin/PLUGIN_SCHEMA_NOTES.md` and `ecc/hooks/README.md`:
+1. `plugin.json` **must** have `version`; `commands`, `skills`, `hooks` must be **arrays**.
+2. **No** `agents` field in `plugin.json` — it is rejected. Agents are found in `agents/`.
+3. Agent `tools` frontmatter is a comma-separated scalar: `tools: Read, Grep, Glob`.
+4. `hooks/hooks.json` holds **only** keys Claude Code accepts. IDs and descriptions live in
+   `hooks/hooks.metadata.json`; a validator keeps the two aligned.
+5. **Plugins cannot ship rules.** With no installer, house rules are a short file
+   (`rules/house-rules.md`, kept under ~1.5 KB) that the `session:start` hook prints into
+   context. Longer guidance lives in skills, which load only when relevant.
+6. Hooks run on every tool call: fast, Node only (works on macOS/Windows/Linux), bounded
+   stdin, never crash the session on bad input. Hook commands reference
+   `${CLAUDE_PLUGIN_ROOT}` — no hard-coded paths.
 
-1. `plugin.json` **must** have `version`; `commands`, `skills`, `hooks` fields must be
-   **arrays**, never strings.
-2. **Do not** add an `agents` field to `plugin.json` — the validator rejects it. Agents are
-   auto-discovered from `agents/`.
-3. Agent frontmatter `tools` is a **comma-separated scalar** (`tools: Read, Grep, Glob`),
-   not a YAML list.
-4. `hooks/hooks.json` may contain **only** keys Claude Code accepts. Keep hook IDs and
-   descriptions in a sidecar (`hooks/hooks.metadata.json`) and validate the two stay aligned.
-5. Plugins cannot ship rules. Rules are installed by the CLI into
-   `~/.claude/rules/mysoftware/` (user) or `.claude/rules/mysoftware/` (project), namespaced so
-   uninstall never touches the user's own files.
-6. Hooks must be fast (timeouts of a few seconds), cross-platform (Node, not bash), must never
-   crash the session on bad input, and must bound how much stdin they read.
-7. Never paste the repo `hooks.json` into a user's `settings.json`; the installer rewrites
-   commands to absolute paths and tracks the entries it owns by ID so updates are idempotent.
+## 3. Shopify task map
 
-## 3. Tech choices
+Which language and tooling each kind of work uses. Skills and the `shopify-architect` agent
+use this table to pick an approach.
 
-- **Node.js ≥ 20, CommonJS, zero runtime dependencies.** Hooks run on every tool call;
-  `node` is already present wherever Claude Code is. Dev-only deps: `eslint`, `markdownlint-cli2`.
-- **Tests:** built-in `node:test` + `node:assert`. One test file per script, plus fixture-driven
-  hook tests (feed JSON on stdin, assert exit code / stdout / stderr).
-- **Package:** published to npm as `mysoftware` with a `bin` entry (`msw`), so
-  `npx mysoftware install` works without cloning.
-- **License:** MIT. Where we adapt ECC text or code, keep attribution in `NOTICE.md`.
+| Task | Language / tools | Skill |
+|---|---|---|
+| Theme edits (sections, blocks, templates, snippets) | Liquid, JSON templates, CSS, vanilla JS; Shopify CLI `shopify theme dev/pull/push`, Theme Check | `shopify-theme` |
+| Custom/private app (admin UI, webhooks, background jobs) | TypeScript, Shopify app template (React Router), Polaris, App Bridge | `shopify-app` |
+| Store data reads and bulk edits (products, inventory, orders, metafields) | GraphQL Admin API from Node or Python scripts; Bulk Operations for large jobs | `shopify-admin-api` |
+| Discounts, delivery/payment customization, cart/checkout validation | Shopify Functions (JavaScript or Rust → WebAssembly) | `shopify-functions` |
+| Webhooks and app security | HMAC verification, OAuth/session tokens, scopes | `shopify-webhooks` |
+| Reports and one-off analysis (CSV exports, sales, stock) | Python (pandas) or Node | `store-data-scripts` |
+
+Ground rules every Shopify skill repeats:
+
+- Prefer the **GraphQL Admin API**; the REST Admin API is legacy. Pin an explicit API version
+  and check Shopify's docs for the current one rather than trusting memory.
+- Look up current API shapes with the Shopify Dev MCP server (`@shopify/dev-mcp`, shipped in
+  the plugin's `.mcp.json`) before writing queries.
+- Work against a **development store or unpublished theme first**. Changes to the live store
+  happen only after the user says so.
 
 ## 4. Repository layout (target)
 
 ```text
 .claude-plugin/
-  plugin.json              # name, version, description, skills[], commands[], userConfig
-  marketplace.json         # single-plugin marketplace so `/plugin marketplace add` works
-agents/                    # planner, tdd-guide, code-reviewer, security-reviewer, build-fixer
-commands/                  # plan, tdd, code-review, build-fix, save-session, resume-session
-skills/<name>/SKILL.md     # tdd-workflow, coding-standards, api-design, security-review,
-                           # verification-loop, session-memory
-rules/common/              # coding-style, testing, security, git-workflow, agents
-rules/typescript/          # first language pack
+  plugin.json            # name, version, skills[], commands[], userConfig
+  marketplace.json       # single-plugin marketplace
+.mcp.json                # Shopify Dev MCP server (docs + schema lookup, no store access)
+agents/
+commands/
+skills/<name>/SKILL.md   # + optional references/
+rules/house-rules.md     # injected by session:start
 hooks/
-  hooks.json               # executable hook graph (schema-clean)
-  hooks.metadata.json      # id, description, fingerprint per entry
+  hooks.json
+  hooks.metadata.json
 scripts/
-  cli.js                   # `msw` entry: install | uninstall | doctor | list
-  hooks/                   # one file per hook + run-with-flags.js
-  lib/                     # hook-flags, hook-input, paths, install-state, settings-merge
-  ci/                      # validate-agents/commands/skills/rules/hooks
-manifests/
-  modules.json             # module id -> paths, targets, dependencies
-  profiles.json            # minimal | standard | full -> module ids
-schemas/                   # JSON Schemas for manifests and install-state
+  hooks/                 # one file per hook + run-with-flags.js
+  lib/                   # hook-flags, hook-input, paths, secrets patterns
+  ci/                    # validate-agents/commands/skills/hooks + manifest check
 tests/
   hooks/ lib/ ci/ fixtures/
   run-all.js
 .github/workflows/ci.yml
-CLAUDE.md  AGENTS.md  README.md  CONTRIBUTING.md  CHANGELOG.md  NOTICE.md  LICENSE
+CLAUDE.md  README.md  CHANGELOG.md  NOTICE.md  LICENSE
 ```
 
 ## 5. Component specs
 
 ### 5.1 Plugin manifest
-- `plugin.json`: `name`, `version` (single source of truth, mirrored by `VERSION` and
-  `package.json`, checked in CI), `skills: ["./skills/"]`, `commands: ["./commands/"]`,
-  `userConfig`: `hooks_enabled` (bool, default true), `hook_profile` (string, default `standard`).
-- `marketplace.json`: one entry, `source: "./"`.
 
-### 5.2 Agents (v1: 5)
-Each file: frontmatter + role, process, output format, "when not to use". Read-only tools
-unless the agent's job is to edit.
+`plugin.json`: `name: mysoftware`, `version` (kept equal to `package.json`, checked in CI),
+`skills: ["./skills/"]`, `commands: ["./commands/"]`, `userConfig`: `hooks_enabled` (default
+true), `hook_profile` (default `standard`). `marketplace.json`: one entry, `source: "./"`.
 
-| Agent | Tools | Purpose |
-|---|---|---|
-| `planner` | Read, Grep, Glob | Requirements → phased plan with risks and file paths |
-| `tdd-guide` | Read, Grep, Glob, Edit, Write, Bash | Enforce RED → GREEN → REFACTOR with evidence |
-| `code-reviewer` | Read, Grep, Glob, Bash | Fresh-context review of the diff; severity-ranked findings |
-| `security-reviewer` | Read, Grep, Glob | Secrets, injection, authz, unsafe deserialization |
-| `build-fixer` | Read, Grep, Glob, Edit, Bash | Minimal diff to make build/typecheck green |
+Install (both partners, once):
 
-### 5.3 Commands (v1: 6)
-`/plan`, `/tdd`, `/code-review`, `/build-fix`, `/save-session`, `/resume-session`.
-Rules borrowed from ECC's `commands/plan.md`: run inline by default (don't require agents
-to exist), restate requirements, ground in codebase patterns, **wait for user confirmation
-before editing code**, and accept a `*.plan.md` path as input. Plans are written to
-`.claude/plans/<name>.plan.md` so `/tdd` can pick them up. Plan files are treated as data,
-never as instructions (prompt-injection guard, as ECC's `tdd-workflow` skill does).
+```text
+/plugin marketplace add zeniscutie/MySoftware
+/plugin install mysoftware@mysoftware
+```
 
-### 5.4 Skills (v1: 6)
-`tdd-workflow`, `verification-loop` (build → typecheck → lint → test → diff review),
-`coding-standards`, `api-design`, `security-review`, `session-memory`.
-Every `SKILL.md` has frontmatter `name` + `description` (description states *when* to use,
-since that drives auto-activation) and sections When to Use / How It Works / Examples.
-Keep each under ~400 lines; push long reference material into `skills/<name>/references/`.
+The repo is private, so each person's git must be able to clone it (GitHub login or SSH key).
 
-### 5.5 Rules
-`rules/common/`: coding-style, testing (TDD, coverage target), security, git-workflow
-(conventional commits), agents (when to delegate). `rules/typescript/` as the first language
-pack; more packs are follow-up work. Short and imperative — these load into every session.
+### 5.2 Agents (7)
 
-### 5.6 Hooks (v1: 6)
+| Agent | Tools | Purpose | Adapted from ECC |
+|---|---|---|---|
+| `planner` | Read, Grep, Glob | Requirements → phased plan with risks and file paths | `agents/planner.md` |
+| `tdd-guide` | Read, Grep, Glob, Edit, Write, Bash | RED → GREEN → REFACTOR with evidence | `agents/tdd-guide.md` |
+| `code-reviewer` | Read, Grep, Glob, Bash | Fresh-context review of the diff | `agents/code-reviewer.md` |
+| `build-fixer` | Read, Grep, Glob, Edit, Bash | Smallest change to make build/typecheck green | `agents/build-error-resolver.md` |
+| `shopify-architect` | Read, Grep, Glob | Picks theme vs app vs Function vs script for a request (§3) and plans it | new |
+| `liquid-reviewer` | Read, Grep, Glob, Bash | Reviews theme changes: Theme Check, performance (image sizes, render-blocking JS), accessibility, OS 2.0 section/block schema | new |
+| `shopify-security-reviewer` | Read, Grep, Glob | Tokens in code, webhook HMAC, OAuth scopes, customer data (PII) handling | `agents/security-reviewer.md` + Shopify specifics |
 
-All hooks go through `scripts/hooks/run-with-flags.js <hookId> <script> <profilesCsv>`, which:
-reads stdin with a byte cap, checks `MSW_HOOKS_ENABLED`, `MSW_HOOK_PROFILE`
-(`minimal|standard|strict`, invalid → `standard`), `MSW_DISABLED_HOOKS` (comma list), falls
-back to the plugin `userConfig`, and exits 0 on any internal error (fail open) except for
-explicitly fail-closed safety hooks.
+### 5.3 Commands (8)
+
+General (adapted from ECC): `/plan`, `/tdd`, `/code-review`, `/save-session`, `/resume-session`.
+`/plan` keeps ECC's behaviour: runs inline, restates requirements, grounds in repo patterns,
+**waits for confirmation before editing**, writes `.claude/plans/<name>.plan.md`.
+
+Shopify:
+
+- `/theme-preview` — pull the theme, make changes against an **unpublished** theme or
+  `shopify theme dev`, give the preview link.
+- `/store-query` — write and dry-run a GraphQL Admin query/mutation; mutations show a
+  before/after sample and need confirmation before running against the store.
+- `/shopify-review` — run `liquid-reviewer` or `shopify-security-reviewer` on the current diff
+  depending on what changed.
+
+### 5.4 Skills (9)
+
+General: `tdd-workflow`, `verification-loop` (build → typecheck → lint → test → diff review),
+`session-memory`. Shopify: the six in §3.
+Each `SKILL.md`: frontmatter `name` + `description` (says *when* to use — that drives
+auto-loading), sections When to Use / How It Works / Examples, under ~400 lines; long reference
+material goes in `references/`.
+
+### 5.5 House rules (`rules/house-rules.md`)
+
+A short list, printed at session start: plan before multi-file changes; tests for logic;
+no secrets in code; dev store / unpublished theme first; ask before anything that touches
+the live store, sends customer emails, or changes prices/inventory in bulk.
+
+### 5.6 Hooks (7)
+
+All hooks go through `scripts/hooks/run-with-flags.js <hookId> <script> <profilesCsv>`:
+bounded stdin, `MSW_HOOKS_ENABLED`, `MSW_HOOK_PROFILE` (`minimal|standard|strict`, invalid →
+`standard`), `MSW_DISABLED_HOOKS` (comma list), plugin `userConfig` as fallback. Fails open on
+internal errors, except the safety hooks marked *fail-closed*.
 
 | ID | Event / matcher | Profiles | Behavior |
 |---|---|---|---|
-| `session:start` | SessionStart | all | Print last session summary for this repo (capped at `MSW_SESSION_START_MAX_CHARS`, opt-out `MSW_SESSION_START_CONTEXT=off`), detect package manager |
+| `session:start` | SessionStart | all | Print house rules + last session summary for this repo (capped by `MSW_SESSION_START_MAX_CHARS`; opt out with `MSW_SESSION_START_CONTEXT=off`) |
 | `pre:compact` | PreCompact | standard, strict | Save working state before compaction |
-| `session:end` | SessionEnd | standard, strict | Write session summary to `~/.claude/mysoftware/sessions/<repo-id>/` |
-| `pre:bash:no-verify` | PreToolUse `Bash` | all | Block `git commit --no-verify` / `git push --no-verify` (exit 2) |
-| `pre:config-protection` | PreToolUse `Edit\|Write` | standard, strict | Block edits that weaken lint/test config (e.g. deleting eslint rules) unless asked |
-| `post:edit:quality` | PostToolUse `Edit\|Write` | strict | Run formatter + typecheck on the edited file only; report, don't block |
+| `session:end` | SessionEnd | standard, strict | Write summary to `~/.claude/mysoftware/sessions/<repo-id>/` (local only) |
+| `pre:bash:no-verify` | PreToolUse `Bash` | all | Block `git commit/push --no-verify` |
+| `pre:bash:shopify-live` | PreToolUse `Bash` | all, *fail-closed* | Block `shopify theme push` / `publish` without `--unpublished` or an explicit `--theme`, `shopify theme push --allow-live`, and `shopify app deploy`, telling Claude to ask the user first |
+| `pre:write:secrets` | PreToolUse `Edit\|Write` | all, *fail-closed* | Block writing Shopify tokens (`shpat_`, `shpss_`, `shpca_`, `shppa_`), API secrets or `.env` contents into tracked files |
+| `post:edit:quality` | PostToolUse `Edit\|Write` | strict | Run the matching check on the edited file (Theme Check for Liquid, `tsc`/eslint for TS, `ruff` for Python if installed); report, don't block |
 
-Session data stays **local**; nothing is sent to a network service.
+### 5.7 CI validators
 
-### 5.7 CLI / installer (`msw`)
-- `msw install [--profile minimal|standard|full] [--modules a,b] [--scope user|project] [--dry-run]`
-- `msw uninstall` — removes only files and settings entries recorded in install-state.
-- `msw doctor` — checks Node version, plugin vs manual install conflicts (warn if both), hook
-  paths resolve, install-state matches disk (hash per file).
-- `msw list` — modules, profiles, what's installed.
-
-Modules: `rules-core`, `agents-core`, `commands-core`, `hooks-runtime`. Profiles:
-`minimal` (no hooks), `standard` (all four), `full` (+ language packs). Install-state lives at
-`<claude-root>/mysoftware/install-state.json` (validated against `schemas/install-state.schema.json`)
-and records every file written with its hash, plus every `settings.json` hook entry by ID.
-`settings.json` edits are merge-only, atomic (write temp + rename), and keep a `.bak`.
-
-### 5.8 CI validators
-`scripts/ci/validate-{agents,commands,skills,rules,hooks}.js` check frontmatter, required
-sections, naming (`lowercase-with-hyphens`), `hooks.json` allowed keys, hooks ↔ metadata
-alignment, manifest paths exist, and that no absolute personal paths (`/Users/…`, `C:\Users\…`)
-are committed. CI matrix: ubuntu, macos, windows × Node 20, 22.
+`scripts/ci/validate-{agents,commands,skills,hooks}.js` + a manifest check: frontmatter,
+required sections, lowercase-hyphen names, `hooks.json` allowed keys, hooks ↔ metadata
+alignment, version sync, no personal absolute paths, no Shopify tokens committed. CI runs on
+ubuntu, macos, windows × Node 22, 24.
 
 ## 6. Phases
 
-Each phase ends with something usable and a green CI run.
+Each phase ends with something usable and CI green.
 
-### Phase 0 — Skeleton (S)
-- `package.json`, `.gitignore`, `LICENSE`, `NOTICE.md`, `CLAUDE.md`, `eslint`/`markdownlint` config.
-- `tests/run-all.js` and `.github/workflows/ci.yml` running lint + tests on the matrix.
-- **Done when:** CI is green on an empty test suite on all three OSes.
+### Phase 0 — Skeleton (S) · *in progress*
 
-### Phase 1 — Content-only plugin (M)
-- `.claude-plugin/plugin.json` + `marketplace.json`.
-- 5 agents, 6 commands, 6 skills, `rules/common`.
-- Validators for agents, commands, skills, rules, plugin manifest; wired into CI.
-- **Done when:** `/plugin marketplace add <repo>` then `/plugin install mysoftware@mysoftware`
-  works in a fresh Claude Code, `/plan` produces a plan and waits for confirmation, and the
-  validators fail on a deliberately broken fixture.
+- `package.json` (no runtime deps; dev: eslint, markdownlint-cli2), `.gitignore`, `LICENSE`,
+  `NOTICE.md`, `CLAUDE.md`, lint configs.
+- `tests/run-all.js` + a smoke test; `.github/workflows/ci.yml` (lint + tests on the matrix).
+- **Done when:** CI is green on all three OSes.
 
-### Phase 2 — Hook runtime (M)
-- `run-with-flags.js`, `lib/hook-flags.js`, `lib/hook-input.js` (bounded stdin, JSON parse
-  that never throws).
-- The 6 hooks in 5.6, `hooks.json` + `hooks.metadata.json`, `validate-hooks.js`.
-- Fixture tests per hook: allow case, block case, malformed input, oversized input, disabled
-  via env, wrong profile.
-- **Done when:** hooks load without schema warnings, each hook runs in < 200 ms on CI, a
-  `--no-verify` commit is blocked, and a new session in the same repo shows the previous summary.
+### Phase 1 — Content plugin (M)
 
-### Phase 3 — CLI installer (M/L)
-- `manifests/`, `schemas/`, `lib/install-state.js`, `lib/settings-merge.js`, `scripts/cli.js`.
-- Tests on temp directories: fresh install, re-install (idempotent, no duplicate hook
-  entries), upgrade, uninstall restores the pre-install `settings.json`, user's own hooks and
-  rules untouched, `--dry-run` writes nothing.
-- **Done when:** `npx mysoftware install --profile standard` then `msw uninstall` leaves
-  `~/.claude` byte-identical to before (except the `.bak`), on all three OSes.
+- `.claude-plugin/` manifests, `.mcp.json` with Shopify Dev MCP.
+- 7 agents, 8 commands, 9 skills, `rules/house-rules.md`.
+- Validators for agents, commands, skills, manifest; wired into CI.
+- **Done when:** both partners can install the plugin; `/plan` asks a Shopify question the
+  right way (picks theme vs app vs script, waits for confirmation); the validators fail on a
+  deliberately broken fixture.
 
-### Phase 4 — Release (S)
-- `msw doctor`, README (install via plugin *or* CLI — pick one, don't stack), CHANGELOG,
-  version-sync check, npm publish workflow on tag.
-- **Done when:** v0.1.0 is on npm and installable both ways.
+### Phase 2 — Hooks (M)
 
-### Later (not scheduled)
-Language packs (python, go), `/learn` (extract a skill from the session, user-approved),
-context profiles (lean vs full skill sets), a second harness target, a status/metrics view.
+- `run-with-flags.js`, `lib/hook-flags.js`, `lib/hook-input.js`, the 7 hooks,
+  `hooks.json` + `hooks.metadata.json`, `validate-hooks.js`.
+- Fixture tests per hook: allow, block, malformed input, oversized input, disabled by env,
+  wrong profile. For `pre:bash:shopify-live`: `theme push --unpublished` allowed,
+  `theme push --allow-live` blocked, `theme publish` blocked, `theme dev` allowed.
+- **Done when:** hooks load with no schema warnings, each runs in < 200 ms, a live theme push
+  is stopped and Claude asks first, and a new session shows the previous summary.
+
+### Phase 3 — First real use (S)
+
+- Use it on one real theme change and one store-data script; fix what's awkward.
+- `README.md` (install, profiles, how to turn a hook off), `CHANGELOG.md`, tag `v0.1.0`.
+
+### Later
+
+`/learn` (save a session's lesson as a skill, user-approved), Hydrogen/headless skill if the
+store ever goes headless, Shopify Flow recipes, a store-metrics report command.
 
 ## 7. Risks
 
 | Risk | Mitigation |
 |---|---|
-| Claude Code plugin/hook schema changes or is stricter than documented | Keep a manifest test that loads `plugin.json`/`hooks.json` against the allowed key sets; pin a "known good" Claude Code version in CI docs; read ECC's schema notes before each release |
-| A hook bug blocks or slows every tool call | Fail open by default, per-hook timeouts, byte-capped stdin, `MSW_DISABLED_HOOKS` kill switch, profile `minimal` with no hooks |
-| Installer clobbers user settings | Merge-only, atomic writes, `.bak`, entries tracked by ID, uninstall tested to restore bytes |
-| Prompt injection via plan files, session summaries or repo content | Treat loaded files as data; SessionStart output is clearly delimited and size-capped; no auto-executing commands found in plans |
-| Context bloat (ECC's main cost) | Small default set; skills load on demand; rules kept short; measure tokens added by SessionStart |
-| Plugin + manual install both active → hooks fire twice | `msw doctor` detects it; installer refuses `hooks-runtime` when the plugin is enabled unless `--force` |
-| Windows path handling | Node `path` everywhere, Windows in CI matrix from Phase 0 |
-
-## 8. Open questions
-
-1. **Name.** Keep "MySoftware"/`msw`, or pick a product name before Phase 1 (it ends up in
-   env vars, paths and the npm package)?
-2. **Audience.** Personal use, a team, or public open source? Public changes how much we
-   invest in docs, the CLI and Windows support up front.
-3. **Language focus.** Which stack should the first language pack and the `build-fixer` agent
-   target — TypeScript (assumed), Python, or something else?
-4. **Vendor vs. write.** ECC is MIT. Do we adapt its agent/skill text (faster, keep
-   attribution) or write our own from scratch (cleaner, more work)?
-5. **Distribution.** Is plugin-only enough for v1 (drop Phase 3), or is the CLI installer required?
+| A change hits the live store by accident | `pre:bash:shopify-live` hook (fail-closed), house rule, `/theme-preview` defaults to unpublished themes, mutations need confirmation |
+| Shopify tokens leak into git | `pre:write:secrets` hook, CI token scan, `.env` in `.gitignore` |
+| Shopify API changes (quarterly versions) make skills stale | Skills say to check the Dev MCP / docs, pin versions explicitly, date each skill's "last checked" line |
+| Claude Code plugin/hook schema is stricter than documented | Manifest + allowed-keys tests in CI; ECC's schema notes as the checklist |
+| A hook bug blocks or slows every tool call | Fail open by default, timeouts, byte-capped stdin, `MSW_DISABLED_HOOKS` kill switch, `minimal` profile |
+| Too much context loaded every session | House rules capped at ~1.5 KB, skills load on demand, session summary capped |
+| Private repo can't be cloned by the plugin system | Both partners sign in to GitHub in git first; noted in README |
