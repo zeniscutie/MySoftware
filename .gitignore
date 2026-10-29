@@ -1,0 +1,11 @@
+node_modules/
+coverage/
+.DS_Store
+
+# Secrets: Shopify tokens and API keys never go in git
+.env
+.env.*
+!.env.example
+
+# Per-person Claude settings
+.claude/settings.local.json
