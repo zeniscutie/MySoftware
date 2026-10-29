@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "mysoftware",
+  "version": "0.1.0",
+  "description": "Private toolkit for running our Shopify store: plan, test, review and remember, plus Shopify theme/app/Functions/Admin API know-how and guardrails against accidental live-store changes.",
+  "author": {
+    "name": "MySoftware"
+  },
+  "repository": "https://github.com/zeniscutie/MySoftware",
+  "license": "MIT",
+  "keywords": ["shopify", "liquid", "tdd", "code-review", "hooks", "session-memory"],
+  "userConfig": {
+    "hooks_enabled": {
+      "type": "boolean",
+      "title": "Enable MySoftware hooks",
+      "description": "Run the safety and session-memory hooks. Turn off to keep only agents, commands and skills.",
+      "default": true
+    },
+    "hook_profile": {
+      "type": "string",
+      "title": "Hook profile",
+      "description": "minimal (safety hooks only), standard (plus session memory) or strict (plus checks after every edit). Anything else means standard.",
+      "default": "standard"
+    }
+  },
+  "skills": ["./skills/"],
+  "commands": ["./commands/"]
+}

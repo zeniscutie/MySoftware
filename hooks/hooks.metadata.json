@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "hooks": [
+    {
+      "id": "session:start",
+      "event": "SessionStart",
+      "description": "Prints the house rules and the latest session notes for this project into Claude's context."
+    },
+    {
+      "id": "pre:bash:no-verify",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "description": "Blocks git commit/push --no-verify, git commit -n and core.hooksPath overrides."
+    },
+    {
+      "id": "pre:bash:shopify-live",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "description": "Blocks Shopify CLI commands that change the live store (live theme push, theme publish/delete, app deploy/release) until the user approves."
+    },
+    {
+      "id": "pre:write:secrets",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+      "description": "Blocks writing Shopify tokens, live payment keys, cloud keys or private keys into files other than .env."
+    },
+    {
+      "id": "post:edit:quality",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "description": "Strict profile only: runs Theme Check, ESLint or Ruff on the edited file and reports problems."
+    },
+    {
+      "id": "pre:compact",
+      "event": "PreCompact",
+      "description": "Saves a short session summary before the conversation is compacted."
+    },
+    {
+      "id": "session:end",
+      "event": "SessionEnd",
+      "description": "Saves a short session summary when the session ends."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "mysoftware",
+  "owner": {
+    "name": "MySoftware"
+  },
+  "metadata": {
+    "description": "Private marketplace for the MySoftware Shopify toolkit"
+  },
+  "plugins": [
+    {
+      "name": "mysoftware",
+      "source": "./",
+      "description": "Plan, test, review and remember, plus Shopify know-how and live-store guardrails.",
+      "version": "0.1.0",
+      "category": "workflow"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Plan: an ECC-style agent harness for running a Shopify store
 
-Status: approved, Phase 0 in progress · Reference: [affaan-m/ecc](https://github.com/affaan-m/ecc) v2.2.3 (MIT)
+Status: v0.1.0 built (Phases 0–2 done, Phase 3 is your first real use) · Reference: [affaan-m/ecc](https://github.com/affaan-m/ecc) v2.2.3 (MIT)
 
 ## 1. Goal
 
@@ -138,8 +138,9 @@ The repo is private, so each person's git must be able to clone it (GitHub login
 
 ### 5.3 Commands (8)
 
-General (adapted from ECC): `/plan`, `/tdd`, `/code-review`, `/save-session`, `/resume-session`.
-`/plan` keeps ECC's behaviour: runs inline, restates requirements, grounds in repo patterns,
+General (adapted from ECC): `/plan-feature`, `/tdd`, `/review-changes`, `/save-session`, `/resume-session`.
+(Named `/plan-feature` and `/review-changes` so they don't clash with Claude Code's built-in
+planning and review commands.) `/plan-feature` keeps ECC's behaviour: runs inline, restates requirements, grounds in repo patterns,
 **waits for confirmation before editing**, writes `.claude/plans/<name>.plan.md`.
 
 Shopify:
@@ -193,23 +194,23 @@ ubuntu, macos, windows × Node 22, 24.
 
 Each phase ends with something usable and CI green.
 
-### Phase 0 — Skeleton (S) · *in progress*
+### Phase 0 — Skeleton (S) · *done*
 
 - `package.json` (no runtime deps; dev: eslint, markdownlint-cli2), `.gitignore`, `LICENSE`,
   `NOTICE.md`, `CLAUDE.md`, lint configs.
 - `tests/run-all.js` + a smoke test; `.github/workflows/ci.yml` (lint + tests on the matrix).
 - **Done when:** CI is green on all three OSes.
 
-### Phase 1 — Content plugin (M)
+### Phase 1 — Content plugin (M) · *done*
 
 - `.claude-plugin/` manifests, `.mcp.json` with Shopify Dev MCP.
 - 7 agents, 8 commands, 9 skills, `rules/house-rules.md`.
 - Validators for agents, commands, skills, manifest; wired into CI.
-- **Done when:** both partners can install the plugin; `/plan` asks a Shopify question the
+- **Done when:** both partners can install the plugin; `/plan-feature` asks a Shopify question the
   right way (picks theme vs app vs script, waits for confirmation); the validators fail on a
   deliberately broken fixture.
 
-### Phase 2 — Hooks (M)
+### Phase 2 — Hooks (M) · *done*
 
 - `run-with-flags.js`, `lib/hook-flags.js`, `lib/hook-input.js`, the 7 hooks,
   `hooks.json` + `hooks.metadata.json`, `validate-hooks.js`.
@@ -222,7 +223,10 @@ Each phase ends with something usable and CI green.
 ### Phase 3 — First real use (S)
 
 - Use it on one real theme change and one store-data script; fix what's awkward.
-- `README.md` (install, profiles, how to turn a hook off), `CHANGELOG.md`, tag `v0.1.0`.
+- `README.md` (install, profiles, how to turn a hook off), `CHANGELOG.md` · *done*.
+- Verified: `claude plugin validate --strict` passes; installs from the marketplace; in a real
+  headless session the house rules load, `shopify theme publish` is blocked and Claude asks
+  first, and the session summary is saved.
 
 ### Later
 

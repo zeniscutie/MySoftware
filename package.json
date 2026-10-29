@@ -1,6 +1,6 @@
 {
   "name": "mysoftware",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "description": "Private Claude Code plugin for running a Shopify store: agents, commands, skills and hooks",
   "license": "MIT",
@@ -11,7 +11,9 @@
     "test": "node tests/run-all.js",
     "lint": "npm run lint:js && npm run lint:md",
     "lint:js": "eslint .",
-    "lint:md": "markdownlint-cli2"
+    "lint:md": "markdownlint-cli2",
+    "validate": "node scripts/ci/validate-content.js && node scripts/ci/validate-plugin.js && node scripts/ci/scan-repo.js",
+    "check": "npm run lint && npm run validate && npm test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
